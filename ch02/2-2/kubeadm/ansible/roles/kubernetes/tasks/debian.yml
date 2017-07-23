@@ -6,6 +6,16 @@
   apt_repository: repo='deb http://apt.kubernetes.io/ kubernetes-xenial main' state=present
   tags:  [kubernetes]
 
+#- name: apt-get update -y
+#  shell: apt-get update -y
+#  tags:  [kubernetes]
+
+- name: Update all packages to the latest version
+  apt:
+    upgrade: dist
+    force: yes
+  tags:  [kubernetes]
+
 - name: Install packages
   apt: name={{ item }} state=installed update_cache=true force=yes
   with_items: "{{ PACKAGES }}"
@@ -39,14 +49,14 @@
   when: user_result|changed
   tags:  [kubernetes]
 
-- name: DockerUI is running
-  docker_container:
-    restart_policy: always
-    image: uifd/ui-for-docker
-    name: dockerui
-    ports: 9000:9000
-    privileged: yes
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-  when: not skip_ui is defined
-  tags:  [kubernetes]
+#- name: DockerUI is running
+#  docker_container:
+#    restart_policy: always
+#    image: uifd/ui-for-docker
+#    name: dockerui
+#    ports: 9000:9000
+#    privileged: yes
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#  when: not skip_ui is defined
+#  tags:  [kubernetes]
