@@ -1,0 +1,52 @@
+- name: Add the Google signing key
+  apt_key: url=https://packages.cloud.google.com/apt/doc/apt-key.gpg state=present
+  tags:  [kubernetes]
+
+- name: Add the k8s APT repo
+  apt_repository: repo='deb http://apt.kubernetes.io/ kubernetes-xenial main' state=present
+  tags:  [kubernetes]
+
+- name: Install packages
+  apt: name={{ item }} state=installed update_cache=true force=yes
+  with_items: "{{ PACKAGES }}"
+  tags:  [kubernetes]
+
+- name: Debian python-pip is present
+  apt:
+    name: python-pip
+    state: present
+    force: yes
+  tags:  [kubernetes]
+
+- name: Debian docker-py is present
+  pip:
+    name: docker-py
+    version: 1.10.6
+    state: present
+  tags: [docker]
+
+- name: vagrant user is added to the docker group
+  user:
+    name: vagrant
+    group: docker
+  register: user_result
+  tags:  [kubernetes]
+
+- name: Debian Docker service is restarted
+  service:
+    name: docker
+    state: restarted
+  when: user_result|changed
+  tags:  [kubernetes]
+
+- name: DockerUI is running
+  docker_container:
+    restart_policy: always
+    image: uifd/ui-for-docker
+    name: dockerui
+    ports: 9000:9000
+    privileged: yes
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  when: not skip_ui is defined
+  tags:  [kubernetes]
