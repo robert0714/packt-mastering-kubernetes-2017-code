@@ -48,6 +48,7 @@ https://www.weave.works/docs/net/latest/kube-addon/
 ```
 $ kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
 ```
+https://www.katacoda.com/courses/kubernetes/getting-started-with-kubeadm
 
 Setting up the pod network
 ================
