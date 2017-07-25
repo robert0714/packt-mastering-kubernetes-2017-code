@@ -42,6 +42,13 @@ n1        NotReady   6m        v1.7.1
 vagrant@n1:~$
 ```
 
+Deploy Container Networking Interface (CNI)
+=======================
+https://www.weave.works/docs/net/latest/kube-addon/
+```
+$ kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+```
+
 Setting up the pod network
 ================
 
